@@ -7,6 +7,7 @@ type Token struct {
 	Literal string
 }
 
+// change = to be, var to let
 const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
