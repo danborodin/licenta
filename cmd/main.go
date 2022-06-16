@@ -4,14 +4,13 @@ import (
 	"bdlang/repl"
 	"fmt"
 	"os"
-	"os/user"
 )
 
 func main() {
-	user, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Hi %s!\n", user.Username)
+	// user, err := user.Current()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	fmt.Printf("bdlang REPL alpha version\n")
 	repl.Start(os.Stdin, os.Stdout)
 }
