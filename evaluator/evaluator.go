@@ -5,6 +5,7 @@ import (
 	"bdlang/object"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"os"
 	"strconv"
@@ -107,6 +108,20 @@ var builtins = map[string]*object.Builtin{
 			return &object.Integer{Value: int64(math.Pow(float64(x), float64(y)))}
 		},
 	},
+	"wd": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 0 {
+				return newError("pwd function should have 0 arguments, got=%d", len(args))
+			}
+
+			wd, err := os.Getwd()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			return &object.String{Value: wd}
+		},
+	},
 }
 
 func Eval(node ast.Node, env *object.Environment) object.Object {
@@ -167,6 +182,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalInfixExpression(node.Operator, left, righ)
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
+	case *ast.WhileExpression:
+		return evalWhileExpression(node, env)
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
 	case *ast.FunctionLiteral:
@@ -302,6 +319,20 @@ func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Obje
 	} else {
 		return NULL
 	}
+}
+
+func evalWhileExpression(we *ast.WhileExpression, env *object.Environment) object.Object {
+	condition := Eval(we.Condition, env)
+	if isError(condition) {
+		return condition
+	}
+
+	for isTruthy(condition) {
+		Eval(we.Body, env)
+		condition = Eval(we.Condition, env)
+	}
+
+	return NULL
 }
 
 func isTruthy(obj object.Object) bool {

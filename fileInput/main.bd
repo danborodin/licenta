@@ -1,6 +1,4 @@
-var a = 4;
-var b = 3;
-var swap = func(x, y) { temp = x; x = y; y = temp; }
-swap(a,b);
-print(a,b);
+
+var printloop = func(a,b) { println("enter loop"); while ( a < b) { println(a); a = a + 1; }; println("end loop"); }
+printloop(1,13);
 

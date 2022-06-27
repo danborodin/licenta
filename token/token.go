@@ -7,7 +7,6 @@ type Token struct {
 	Literal string
 }
 
-// change = to be, var to let
 const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
@@ -41,6 +40,7 @@ const (
 	IF       = "IF"
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
+	WHILE    = "WHILE"
 
 	EQ     = "=="
 	NOT_EQ = "!="
@@ -54,6 +54,7 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"while":  WHILE,
 }
 
 func LookupIdent(ident string) TokenType {
