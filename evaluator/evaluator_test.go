@@ -213,6 +213,18 @@ func TestVarStatements(t *testing.T) {
 	}
 }
 
+func TestReassignStatements(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{"var a = 5; a = 6; a;", 6},
+	}
+	for _, tt := range tests {
+		testIntegerObject(t, testEval(tt.input), tt.expected)
+	}
+}
+
 func TestFunctionObject(t *testing.T) {
 	input := "func(x) { x + 2; };"
 	evaluated := testEval(input)

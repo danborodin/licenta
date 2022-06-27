@@ -76,6 +76,30 @@ func (vs *VarStatement) String() string {
 	return out.String()
 }
 
+type ReAssignStatement struct {
+	Token token.Token
+	Name  *Identifier
+	Value Expression
+}
+
+func (ras *ReAssignStatement) statementNode()       {}
+func (ras *ReAssignStatement) TokenLiteral() string { return ras.Token.Literal }
+func (ras *ReAssignStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ras.TokenLiteral() + " ")
+	out.WriteString(ras.Name.String())
+	out.WriteString(" = ")
+
+	if ras.Value != nil {
+		out.WriteString(ras.Value.String())
+	}
+
+	out.WriteString(";")
+
+	return out.String()
+}
+
 type ReturnStatement struct {
 	Token       token.Token
 	ReturnValue Expression

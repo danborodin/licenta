@@ -4,7 +4,9 @@ import (
 	"bdlang/ast"
 	"bdlang/object"
 	"fmt"
+	"io"
 	"math"
+	"os"
 	"strconv"
 )
 
@@ -48,7 +50,8 @@ var builtins = map[string]*object.Builtin{
 				}
 			}
 
-			fmt.Print(str)
+			io.WriteString(os.Stdout, str)
+			io.WriteString(os.Stdout, "\n")
 
 			return nil
 		},
@@ -72,7 +75,8 @@ var builtins = map[string]*object.Builtin{
 				}
 			}
 
-			fmt.Println(str)
+			io.WriteString(os.Stdout, str)
+			io.WriteString(os.Stdout, "\n")
 
 			return nil
 		},
@@ -125,6 +129,17 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		if isError(val) {
 			return val
 		}
+		env.Set(node.Name.Value, val)
+	case *ast.ReAssignStatement:
+		val := Eval(node.Value, env)
+		if isError(val) {
+			return val
+		}
+		_, ok := env.Get(node.Name.Value)
+		if !ok {
+			return nil
+		}
+
 		env.Set(node.Name.Value, val)
 
 	// expressions
