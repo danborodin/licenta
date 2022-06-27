@@ -36,11 +36,11 @@ func Start(fileName string) {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program, env)
-		if evaluated != nil {
-			io.WriteString(os.Stdout, evaluated.Inspect())
-			io.WriteString(os.Stdout, "\n")
-		}
+		evaluator.Eval(program, env)
+		// if evaluated != nil {
+		// 	io.WriteString(os.Stdout, evaluated.Inspect())
+		// 	io.WriteString(os.Stdout, "\n")
+		// }
 	}
 }
 

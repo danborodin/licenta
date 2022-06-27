@@ -1,7 +1,10 @@
-var str = "huy v pizde";
+var str = "Dana";
 var integer = 123;
-var boool = false;
-var x = 0;
+var bool = false;
 
-var test = func(a,b,c) { if (a == b) { print(c); return true;} else{return false;}}
-test(1,1,"dan");
+var fn = func(a) { println(a); return 123; }
+var max = func(x,y) { if (x < y) { return y; } else { return x; } }
+var ff = func() { var a = 1; var b = 3; var bool = true; return a + b; }
+println(ff());
+println(bool);
+

@@ -4,6 +4,7 @@ import (
 	"bdlang/ast"
 	"bdlang/object"
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -39,17 +40,67 @@ var builtins = map[string]*object.Builtin{
 			for i := range args {
 				switch arg := args[i].(type) {
 				case *object.String:
-					str = str + " " + arg.Value
+					str = str + arg.Value
 				case *object.Integer:
-					str = str + " " + strconv.Itoa(int(arg.Value))
+					str = str + strconv.Itoa(int(arg.Value))
 				case *object.Boolean:
-					str = str + " " + strconv.FormatBool(arg.Value)
+					str = str + strconv.FormatBool(arg.Value)
 				}
 			}
 
-			fmt.Println(str[1:])
+			fmt.Print(str)
 
 			return nil
+		},
+	},
+	"println": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) <= 0 {
+				return newError("not enoughth arguments in function 'println' call, got=%d, want 1 or more", len(args))
+			}
+
+			var str string = ""
+
+			for i := range args {
+				switch arg := args[i].(type) {
+				case *object.String:
+					str = str + arg.Value
+				case *object.Integer:
+					str = str + strconv.Itoa(int(arg.Value))
+				case *object.Boolean:
+					str = str + strconv.FormatBool(arg.Value)
+				}
+			}
+
+			fmt.Println(str)
+
+			return nil
+		},
+	},
+	"pow": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) <= 1 {
+				return newError("not enoughth arguments in function 'pow' call, got=%d, want 2", len(args))
+			}
+
+			var x int
+			var y int
+
+			switch arg := args[0].(type) {
+			case *object.Integer:
+				x = int(arg.Value)
+			default:
+				return newError("first argument is not an integer, got=%s", arg.Type())
+			}
+
+			switch arg := args[1].(type) {
+			case *object.Integer:
+				y = int(arg.Value)
+			default:
+				return newError("second argument is not an integer, got=%s", arg.Type())
+			}
+
+			return &object.Integer{Value: int64(math.Pow(float64(x), float64(y)))}
 		},
 	},
 }
