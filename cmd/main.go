@@ -1,8 +1,7 @@
 package main
 
 import (
-	"bdlang/repl"
-	"fmt"
+	fileinput "bdlang/fileInput"
 	"os"
 )
 
@@ -11,6 +10,10 @@ func main() {
 	// if err != nil {
 	// 	panic(err)
 	// }
-	fmt.Printf("bdlang REPL alpha version\n")
-	repl.Start(os.Stdin, os.Stdout)
+	file := os.Args[1]
+	//fmt.Println(file)
+	fileinput.Start(file)
+
+	//fmt.Printf("bdlang REPL alpha version\n")
+	//repl.Start(os.Stdin, os.Stdout)
 }

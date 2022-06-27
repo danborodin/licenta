@@ -1,4 +1,4 @@
-package repl
+package fileinput
 
 import (
 	"bdlang/evaluator"
@@ -6,18 +6,20 @@ import (
 	"bdlang/object"
 	"bdlang/parser"
 	"bufio"
-	"fmt"
 	"io"
+	"log"
+	"os"
 )
 
-const PROMPT = "-> "
-
-func Start(in io.Reader, out io.Writer) {
-	scanner := bufio.NewScanner(in)
+func Start(fileName string) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	scanner := bufio.NewScanner(file)
 	env := object.NewEnvironment()
 
 	for {
-		fmt.Print(PROMPT)
 
 		scanned := scanner.Scan()
 		if !scanned {
@@ -30,17 +32,16 @@ func Start(in io.Reader, out io.Writer) {
 
 		program := p.ParseProgram()
 		if len(p.Errors()) != 0 {
-			printParseErrors(out, p.Errors())
+			printParseErrors(os.Stdout, p.Errors())
 			continue
 		}
 
 		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
-			io.WriteString(out, evaluated.Inspect())
-			io.WriteString(out, "\n")
+			io.WriteString(os.Stdout, evaluated.Inspect())
+			io.WriteString(os.Stdout, "\n")
 		}
 	}
-
 }
 
 func printParseErrors(out io.Writer, errors []string) {

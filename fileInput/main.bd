@@ -1,0 +1,5 @@
+var add = func(a,b) { return a * b; }
+var for = func(a,b,c,d) { if(a < b+1) {for(a+c,b,c,add(d,a)) } else { return d; } }
+var second = func(a) {  }
+for(1,10,1,1)
+

@@ -12,8 +12,9 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
-	IDENT = "IDENT"
-	INT   = "INT"
+	IDENT  = "IDENT"
+	INT    = "INT"
+	STRING = "STRING"
 
 	ASSIGN   = "="
 	PLUS     = "+"
@@ -39,7 +40,7 @@ const (
 	FALSE    = "FALSE"
 	IF       = "IF"
 	ELSE     = "ELSE"
-	RETURN   = "RETURUN"
+	RETURN   = "RETURN"
 
 	EQ     = "=="
 	NOT_EQ = "!="
