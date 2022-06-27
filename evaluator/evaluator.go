@@ -2,13 +2,8 @@ package evaluator
 
 import (
 	"bdlang/ast"
+	"bdlang/builtin"
 	"bdlang/object"
-	"fmt"
-	"io"
-	"log"
-	"math"
-	"os"
-	"strconv"
 )
 
 var (
@@ -16,113 +11,6 @@ var (
 	FALSE = &object.Boolean{Value: false}
 	NULL  = &object.Null{}
 )
-
-var builtins = map[string]*object.Builtin{
-	"len": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
-			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1", len(args))
-			}
-
-			switch arg := args[0].(type) {
-			case *object.String:
-				return &object.Integer{Value: int64(len(arg.Value))}
-			default:
-				return newError("argument to `len` not supported, got %s", args[0].Type())
-			}
-		},
-	},
-	"print": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
-			if len(args) <= 0 {
-				return newError("not enoughth arguments in function 'print' call, got=%d, want 1 or more", len(args))
-			}
-
-			var str string = ""
-
-			for i := range args {
-				switch arg := args[i].(type) {
-				case *object.String:
-					str = str + arg.Value
-				case *object.Integer:
-					str = str + strconv.Itoa(int(arg.Value))
-				case *object.Boolean:
-					str = str + strconv.FormatBool(arg.Value)
-				}
-			}
-
-			io.WriteString(os.Stdout, str)
-			io.WriteString(os.Stdout, "\n")
-
-			return nil
-		},
-	},
-	"println": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
-			if len(args) <= 0 {
-				return newError("not enoughth arguments in function 'println' call, got=%d, want 1 or more", len(args))
-			}
-
-			var str string = ""
-
-			for i := range args {
-				switch arg := args[i].(type) {
-				case *object.String:
-					str = str + arg.Value
-				case *object.Integer:
-					str = str + strconv.Itoa(int(arg.Value))
-				case *object.Boolean:
-					str = str + strconv.FormatBool(arg.Value)
-				}
-			}
-
-			io.WriteString(os.Stdout, str)
-			io.WriteString(os.Stdout, "\n")
-
-			return nil
-		},
-	},
-	"pow": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
-			if len(args) <= 1 {
-				return newError("not enoughth arguments in function 'pow' call, got=%d, want 2", len(args))
-			}
-
-			var x int
-			var y int
-
-			switch arg := args[0].(type) {
-			case *object.Integer:
-				x = int(arg.Value)
-			default:
-				return newError("first argument is not an integer, got=%s", arg.Type())
-			}
-
-			switch arg := args[1].(type) {
-			case *object.Integer:
-				y = int(arg.Value)
-			default:
-				return newError("second argument is not an integer, got=%s", arg.Type())
-			}
-
-			return &object.Integer{Value: int64(math.Pow(float64(x), float64(y)))}
-		},
-	},
-	"wd": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
-			if len(args) != 0 {
-				return newError("pwd function should have 0 arguments, got=%d", len(args))
-			}
-
-			wd, err := os.Getwd()
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			return &object.String{Value: wd}
-		},
-	},
-}
 
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
@@ -236,7 +124,7 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 	case "-":
 		return evalMinusPrefixOperatorExpression(right)
 	default:
-		return newError("unknown operator: %s%s", operator, right.Type())
+		return object.NewError("unknown operator: %s%s", operator, right.Type())
 	}
 }
 
@@ -255,7 +143,7 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 
 func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 	if right.Type() != object.INTEGER_OBJ {
-		return newError("unknown operator: -%s", right.Type())
+		return object.NewError("unknown operator: -%s", right.Type())
 	}
 
 	value := right.(*object.Integer).Value
@@ -271,11 +159,11 @@ func evalInfixExpression(operator string, left, right object.Object) object.Obje
 	case operator == "!=":
 		return nativeBoolToBooleanObject(left != right)
 	case left.Type() != right.Type():
-		return newError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
+		return object.NewError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
 	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
 		return evalStringInfixExpression(operator, left, right)
 	default:
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return object.NewError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }
 
@@ -301,7 +189,7 @@ func evalIntegerInfixExpression(operator string, left, right object.Object) obje
 	case "!=":
 		return nativeBoolToBooleanObject(leftVal != rightVal)
 	default:
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return object.NewError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 
 }
@@ -370,11 +258,11 @@ func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object
 		return val
 	}
 
-	if builtin, ok := builtins[node.Value]; ok {
+	if builtin, ok := builtin.Functions[node.Value]; ok {
 		return builtin
 	}
 
-	return newError("identifier not found: " + node.Value)
+	return object.NewError("identifier not found: " + node.Value)
 }
 
 func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Object {
@@ -393,7 +281,7 @@ func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Ob
 
 func evalStringInfixExpression(operator string, left, right object.Object) object.Object {
 	if operator != "+" {
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return object.NewError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 
 	leftVal := left.(*object.String).Value
@@ -411,7 +299,7 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 	case *object.Builtin:
 		return fn.Fn(args...)
 	default:
-		return newError("not a function: %s", fn.Type())
+		return object.NewError("not a function: %s", fn.Type())
 	}
 }
 
@@ -432,10 +320,6 @@ func unwrapReturnValue(obj object.Object) object.Object {
 	}
 
 	return obj
-}
-
-func newError(format string, a ...interface{}) *object.Error {
-	return &object.Error{Message: fmt.Sprintf(format, a...)}
 }
 
 func isError(obj object.Object) bool {
