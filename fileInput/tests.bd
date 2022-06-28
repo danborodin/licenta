@@ -1,0 +1,9 @@
+var a = false;
+var b = readln();
+println(b)
+
+if (a) {
+    println("on")
+} else {
+    println("off")
+}
