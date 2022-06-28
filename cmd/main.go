@@ -13,7 +13,7 @@ func main() {
 		file := os.Args[1]
 		fileinput.Start(file)
 	} else {
-		fmt.Printf("bdlang REPL alpha version\n")
+		fmt.Printf("bdlang REPL\n")
 		repl.Start(os.Stdin, os.Stdout)
 	}
 

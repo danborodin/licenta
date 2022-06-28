@@ -44,7 +44,6 @@ var Functions = map[string]*object.Builtin{
 			}
 
 			io.WriteString(os.Stdout, str)
-			io.WriteString(os.Stdout, "\n")
 
 			return nil
 		},

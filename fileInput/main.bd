@@ -1,4 +1,4 @@
-
-var printloop = func(a,b) { println("enter loop"); while ( a < b) { println(a); a = a + 1; }; println("end loop"); }
-printloop(1,13);
+var fn = func() {
+    println("asd");
+}
 
