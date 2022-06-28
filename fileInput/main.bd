@@ -1,14 +1,23 @@
-var a = 10;
-var i = 0;
+
 
 var main = func() {
-    loop("Sergio looser");
+    println("enter number 1")
+    var nrone = readln()
+    println("enter number 2")
+    var nrtwo = readln()
+    println("are u gay? true/false")
+    var gay = readln()
+    loopgay(nrone, nrtwo, gay)
 }
 
-var loop = func(n) {
-    while(i < a) {
-        println(n);
-        i = i + 1;
+var loopgay = func(i,n,g) {
+    while(i < n) {
+        if (g) {
+            println("you are gay")
+        } else {
+            println("wtf??")
+        }
+        i = i + 1
     }
 }
 

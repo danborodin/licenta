@@ -18,6 +18,12 @@ const (
 	BUILTIN_OBJ      = "BUILTIN"
 )
 
+var (
+	TRUE  = &Boolean{Value: true}
+	FALSE = &Boolean{Value: false}
+	NULL  = &Null{}
+)
+
 type ObjectType string
 
 type Object interface {

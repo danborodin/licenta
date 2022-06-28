@@ -6,12 +6,6 @@ import (
 	"bdlang/object"
 )
 
-var (
-	TRUE  = &object.Boolean{Value: true}
-	FALSE = &object.Boolean{Value: false}
-	NULL  = &object.Null{}
-)
-
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
 	// statements
@@ -112,9 +106,9 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 
 func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	if input {
-		return TRUE
+		return object.TRUE
 	}
-	return FALSE
+	return object.FALSE
 }
 
 func evalPrefixExpression(operator string, right object.Object) object.Object {
@@ -130,14 +124,14 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 
 func evalBangOperatorExpression(right object.Object) object.Object {
 	switch right {
-	case TRUE:
-		return FALSE
-	case FALSE:
-		return TRUE
-	case NULL:
-		return TRUE
+	case object.TRUE:
+		return object.FALSE
+	case object.FALSE:
+		return object.TRUE
+	case object.NULL:
+		return object.TRUE
 	default:
-		return FALSE
+		return object.FALSE
 	}
 }
 
@@ -205,7 +199,7 @@ func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Obje
 	} else if ie.Alternative != nil {
 		return Eval(ie.Alternative, env)
 	} else {
-		return NULL
+		return object.NULL
 	}
 }
 
@@ -220,16 +214,16 @@ func evalWhileExpression(we *ast.WhileExpression, env *object.Environment) objec
 		condition = Eval(we.Condition, env)
 	}
 
-	return NULL
+	return object.NULL
 }
 
 func isTruthy(obj object.Object) bool {
 	switch obj {
-	case NULL:
+	case object.NULL:
 		return false
-	case TRUE:
+	case object.TRUE:
 		return true
-	case FALSE:
+	case object.FALSE:
 		return false
 	default:
 		return true
