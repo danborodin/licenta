@@ -1,4 +1,15 @@
-var fn = func() {
-    println("asd");
+var a = 10;
+var i = 0;
+
+var main = func() {
+    loop("Sergio looser");
 }
 
+var loop = func(n) {
+    while(i < a) {
+        println(n);
+        i = i + 1;
+    }
+}
+
+main()
