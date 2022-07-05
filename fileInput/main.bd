@@ -5,17 +5,17 @@ var main = func() {
     var nrone = readln()
     println("enter number 2")
     var nrtwo = readln()
-    println("are u gay? true/false")
-    var gay = readln()
-    loopgay(nrone, nrtwo, gay)
+    println("enter bool? true/false")
+    var btest = readln()
+    loop(nrone, nrtwo, btest)
 }
 
-var loopgay = func(i,n,g) {
+var loop = func(i,n,g) {
     while(i < n) {
         if (g) {
-            println("you are gay")
+            println("test1")
         } else {
-            println("wtf??")
+            println("test2")
         }
         i = i + 1
     }

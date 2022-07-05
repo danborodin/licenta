@@ -1,0 +1,14 @@
+var arr = [1,2,3];
+var i = 1;
+var larr = len(arr)
+
+println(arr)
+
+while (i < larr) {
+    fr = first(arr)
+    var newArr = rest(arr)
+    i = i + 1;
+    arr = newArr
+    println(arr)
+}
+

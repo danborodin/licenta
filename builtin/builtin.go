@@ -20,7 +20,25 @@ var Functions = map[string]*object.Builtin{
 	"wd": {
 		Fn: internalWd,
 	},
+	"cd": {
+		Fn: internalCd,
+	},
 	"readln": {
 		Fn: internalReadln,
+	},
+	"first": {
+		Fn: internalArrayFirst,
+	},
+	"last": {
+		Fn: internalArrayLast,
+	},
+	"rest": {
+		Fn: internalArrayRest,
+	},
+	"push": {
+		Fn: internalArrayPush,
+	},
+	"runCmd": {
+		Fn: internalRunCmd,
 	},
 }

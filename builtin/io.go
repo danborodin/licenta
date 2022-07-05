@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func internalPrint(args ...object.Object) object.Object {
@@ -23,6 +24,14 @@ func internalPrint(args ...object.Object) object.Object {
 			str = str + strconv.Itoa(int(arg.Value))
 		case *object.Boolean:
 			str = str + strconv.FormatBool(arg.Value)
+		case *object.Array:
+			elements := []string{}
+			for _, e := range args[i].(*object.Array).Elements {
+				elements = append(elements, e.Inspect())
+			}
+			str = str + "["
+			str = str + strings.Join(elements, ", ")
+			str = str + "]"
 		}
 	}
 
@@ -46,6 +55,14 @@ func internalPrintln(args ...object.Object) object.Object {
 			str = str + strconv.Itoa(int(arg.Value))
 		case *object.Boolean:
 			str = str + strconv.FormatBool(arg.Value)
+		case *object.Array:
+			elements := []string{}
+			for _, e := range args[i].(*object.Array).Elements {
+				elements = append(elements, e.Inspect())
+			}
+			str = str + "["
+			str = str + strings.Join(elements, ", ")
+			str = str + "]"
 		}
 	}
 
