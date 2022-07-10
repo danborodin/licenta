@@ -9,7 +9,7 @@ var fib = func(n) {
     return fib(n-1) + fib(n-2);
 }
 
-var input = 10
+var input = readln()
 
 
 println(fib(input));

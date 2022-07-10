@@ -1,0 +1,3 @@
+runCmd("git","pull","https://github.com/danborodin/licenta")
+cd("licenta/cmd/")
+runCmd("go","build", "-o", "../build/bdlang")

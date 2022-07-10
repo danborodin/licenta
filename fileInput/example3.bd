@@ -1,0 +1,3 @@
+runCmd("curl", "--output", "go.tar.gz", "https://dl.google.com/go/go1.18.3.linux-amd64.tar.gz");
+runCmd("sudo", "echo", "export PATH=$PATH:/usr/local/go/bin", ">>", "$HOME/.profile");
+println(runCmd("go", "version"));
